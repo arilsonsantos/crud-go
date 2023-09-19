@@ -1,8 +1,8 @@
-package rest_err
+package errors
 
 import "net/http"
 
-type RestErr struct {
+type ErrorDto struct {
 	Message string  `json:"message"`
 	Err     string  `json:"err"`
 	Code    int     `json:"code"`
@@ -14,12 +14,12 @@ type Cause struct {
 	Message string `json:"message"`
 }
 
-func (r *RestErr) Error() string {
+func (r *ErrorDto) Error() string {
 	return r.Message
 }
 
-func NewRestErr(message string, err string, code int, causes []Cause) *RestErr {
-	return &RestErr{
+func RestError(message string, err string, code int, causes []Cause) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     err,
 		Code:    code,
@@ -27,16 +27,16 @@ func NewRestErr(message string, err string, code int, causes []Cause) *RestErr {
 	}
 }
 
-func NewBadRequestError(message string) *RestErr {
-	return &RestErr{
+func BadRequestError(message string) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     "Bad Request",
 		Code:    http.StatusBadRequest,
 	}
 }
 
-func NewBadRequestValidationError(message string, causes []Cause) *RestErr {
-	return &RestErr{
+func BadRequestCauseError(message string, causes []Cause) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     "Bad Request",
 		Code:    http.StatusBadRequest,
@@ -44,24 +44,24 @@ func NewBadRequestValidationError(message string, causes []Cause) *RestErr {
 	}
 }
 
-func NewInternalServerError(message string) *RestErr {
-	return &RestErr{
+func InternalServerError(message string) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     "Internal Server Error",
 		Code:    http.StatusInternalServerError,
 	}
 }
 
-func NewNotFound(message string) *RestErr {
-	return &RestErr{
+func NotFoundError(message string) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     "Not Found",
 		Code:    http.StatusNotFound,
 	}
 }
 
-func NewForbiden(message string) *RestErr {
-	return &RestErr{
+func ForbiddenError(message string) *ErrorDto {
+	return &ErrorDto{
 		Message: message,
 		Err:     "Forbiden",
 		Code:    http.StatusForbidden,

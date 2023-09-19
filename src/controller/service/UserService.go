@@ -1,13 +1,13 @@
-package controller
+package service
 
 import (
 	"fmt"
-	"github.com/arilsonsantos/crud-go.git/src/configuration/validation"
 	"github.com/arilsonsantos/crud-go.git/src/controller/model/request"
+	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
 	"github.com/gin-gonic/gin"
 )
 
-func CreateUser(c *gin.Context) {
+func Create(c *gin.Context) {
 
 	var userRequest request.UserRequest
 
@@ -18,3 +18,11 @@ func CreateUser(c *gin.Context) {
 	}
 	fmt.Println(userRequest)
 }
+
+func Update(c *gin.Context) {}
+
+func Delete(c *gin.Context) {}
+
+func FindBydId(c *gin.Context) {}
+
+func FindBydEmail(c *gin.Context) {}
