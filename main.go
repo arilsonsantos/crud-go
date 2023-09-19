@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"log"
 	"os"
 
@@ -11,6 +12,7 @@ import (
 )
 
 func main() {
+	logger.Info("Starting application...")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Deu pau!")
