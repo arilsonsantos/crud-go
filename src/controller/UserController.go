@@ -2,13 +2,12 @@ package controller
 
 import (
 	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
 	"github.com/arilsonsantos/crud-go.git/src/model"
 	service "github.com/arilsonsantos/crud-go.git/src/model/service"
 	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
-	"github.com/arilsonsantos/crud-go.git/src/model/dto"
-
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
