@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/model"
 	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
@@ -10,6 +11,10 @@ import (
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func Create(c *gin.Context) {
@@ -24,16 +29,21 @@ func Create(c *gin.Context) {
 	}
 	fmt.Println(userRequest)
 
-	userResponse := dto.UserResponseDto{
-		Id:    "123",
-		Email: userRequest.Email,
-		Name:  userRequest.Name,
-		Age:   userRequest.Age,
+	userDomain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	if err := userDomain.Create(); err != nil {
+		c.JSON(err.Code, err)
+		return
 	}
 
 	logger.Info("User added with success", zap.String("journey", "createUser"))
 
-	c.JSON(http.StatusOK, userResponse)
+	c.String(http.StatusOK, "")
 }
 
 func Update(c *gin.Context) {}

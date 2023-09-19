@@ -1,24 +1,20 @@
 package main
 
 import (
-	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/routes"
 	"log"
-	"os"
-
-	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	logger.Info("Starting application...")
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Deu pau!")
-	}
-	fmt.Println(os.Getenv("TESTE"))
+	//err := godotenv.Load()
+	//if err != nil {
+	//	log.Fatal("Deu pau!")
+	//}
+	//fmt.Println(os.Getenv("TESTE"))
 
 	router := gin.Default()
 	routes.InitRoutes(&router.RouterGroup)
