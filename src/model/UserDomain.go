@@ -3,14 +3,13 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/arilsonsantos/crud-go.git/src/errors"
 )
 
 func NewUserDomain(
 	email, password, name string,
 	age int8,
 ) UserDomainInterface {
-	return &UserDomain{
+	return &userDomain{
 		email,
 		password,
 		name,
@@ -18,23 +17,37 @@ func NewUserDomain(
 	}
 }
 
-type UserDomain struct {
-	Email    string
-	Password string
-	Name     string
-	Age      int8
+type userDomain struct {
+	email    string
+	password string
+	name     string
+	age      int8
 }
 
-func (user *UserDomain) EncryptPassword() {
+func (ud *userDomain) GetEmail() string {
+	return ud.email
+}
+func (ud *userDomain) GetPassword() string {
+	return ud.password
+}
+func (ud *userDomain) GetName() string {
+	return ud.name
+}
+func (ud *userDomain) GetAge() int8 {
+	return ud.age
+}
+
+func (user *userDomain) EncryptPassword() {
 	hash := md5.New()
 	defer hash.Reset()
-	hash.Write([]byte(user.Password))
-	user.Password = hex.EncodeToString(hash.Sum(nil))
+	hash.Write([]byte(user.password))
+	user.password = hex.EncodeToString(hash.Sum(nil))
 }
 
 type UserDomainInterface interface {
-	Create() *errors.ErrorDto
-	Find(string) (*UserDomain, *errors.ErrorDto) // Update the return type here
-	Update(string) *errors.ErrorDto
-	Delete(string) *errors.ErrorDto
+	GetEmail() string
+	GetPassword() string
+	GetName() string
+	GetAge() int8
+	EncryptPassword()
 }

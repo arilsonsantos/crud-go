@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/arilsonsantos/crud-go.git/src/model"
+	service "github.com/arilsonsantos/crud-go.git/src/model/service"
 	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
@@ -36,7 +37,8 @@ func Create(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	if err := userDomain.Create(); err != nil {
+	service := service.NewUserDomainService()
+	if err := service.Create(userDomain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
