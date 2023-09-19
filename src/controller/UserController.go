@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
 	"github.com/arilsonsantos/crud-go.git/src/model"
-	service "github.com/arilsonsantos/crud-go.git/src/model/service"
+	"github.com/arilsonsantos/crud-go.git/src/view"
 	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
@@ -17,7 +17,7 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func Create(c *gin.Context) {
+func (uc *userControllerInterface) Create(c *gin.Context) {
 	logger.Info("Init create user")
 	var userRequest dto.UserRequestDto
 
@@ -36,21 +36,21 @@ func Create(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	service := service.NewUserDomainService()
-	if err := service.Create(userDomain); err != nil {
+	if err := uc.service.Create(userDomain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
 
 	logger.Info("User added with success", zap.String("journey", "createUser"))
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(userDomain))
+	return
 }
 
-func Update(c *gin.Context) {}
+func (uc *userControllerInterface) Update(c *gin.Context) {}
 
-func Delete(c *gin.Context) {}
+func (uc *userControllerInterface) Delete(c *gin.Context) {}
 
-func FindBydId(c *gin.Context) {}
+func (uc *userControllerInterface) FindById(c *gin.Context) {}
 
-func FindBydEmail(c *gin.Context) {}
+func (uc *userControllerInterface) FindByEmail(c *gin.Context) {}
