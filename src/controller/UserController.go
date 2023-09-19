@@ -1,19 +1,20 @@
-package service
+package controller
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
-	"github.com/arilsonsantos/crud-go.git/src/controller/model/request"
-	"github.com/arilsonsantos/crud-go.git/src/controller/model/response"
+	"github.com/arilsonsantos/crud-go.git/src/model/dto"
+
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 func Create(c *gin.Context) {
 	logger.Info("Init create user")
-	var userRequest request.UserRequest
+	var userRequest dto.UserRequestDto
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		logger.Error("Error trying to validate user", err, zap.String("journey", "createUser"))
@@ -23,7 +24,7 @@ func Create(c *gin.Context) {
 	}
 	fmt.Println(userRequest)
 
-	userResponse := response.UserResponse{
+	userResponse := dto.UserResponseDto{
 		Id:    "123",
 		Email: userRequest.Email,
 		Name:  userRequest.Name,

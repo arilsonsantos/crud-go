@@ -1,6 +1,6 @@
-package response
+package dto
 
-type UserResponse struct {
+type UserResponseDto struct {
 	Id    string `json:"id"`
 	Email string `json:"email"`
 	Name  string `json:"name"`
