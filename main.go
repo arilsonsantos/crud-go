@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/arilsonsantos/crud-go.git/src/controller/routes"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -14,4 +16,11 @@ func main() {
 		log.Fatal("Deu pau!")
 	}
 	fmt.Println(os.Getenv("TESTE"))
+
+	router := gin.Default()
+	routes.InitRoutes(&router.RouterGroup)
+
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }
