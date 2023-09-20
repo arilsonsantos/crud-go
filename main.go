@@ -2,6 +2,7 @@ package main
 
 import (
 	fmt "fmt"
+	"github.com/arilsonsantos/crud-go.git/src/configuration/database"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/routes"
 	"github.com/arilsonsantos/crud-go.git/src/controller"
@@ -20,6 +21,8 @@ func main() {
 		log.Fatal("Deu pau!")
 	}
 	fmt.Println(os.Getenv("TESTE"))
+
+	database.InitConnection()
 
 	//Init dependencies
 	service := service.NewUserDomainService()
