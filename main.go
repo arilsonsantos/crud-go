@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	fmt "fmt"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/database"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
@@ -22,7 +23,8 @@ func main() {
 	}
 	fmt.Println(os.Getenv("TESTE"))
 
-	database.InitConnection()
+	ctx := context.Background()
+	database.NewMongoDBConnection(ctx)
 
 	//Init dependencies
 	service := service.NewUserDomainService()

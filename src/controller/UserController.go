@@ -2,10 +2,11 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
 	"github.com/arilsonsantos/crud-go.git/src/model"
 	"github.com/arilsonsantos/crud-go.git/src/view"
-	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
@@ -44,7 +45,6 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 	logger.Info("User added with success", zap.String("journey", "createUser"))
 
 	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(userDomain))
-	return
 }
 
 func (uc *userControllerInterface) Update(c *gin.Context) {}
