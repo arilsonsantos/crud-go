@@ -7,7 +7,7 @@ Content-Type: application/json
 {
   "email": "email@email.com",
   "password": "1234!",
-  "name": "Teste",
+  "name": "Joao",
   "age": 1
 }
 
@@ -17,8 +17,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "email@email.com",
+  "email": "joao@email.com",
   "password": "12345!",
-  "name": "Teste",
+  "name": "Joao",
   "age": 1
 }

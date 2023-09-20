@@ -7,6 +7,7 @@ import (
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/routes"
 	"github.com/arilsonsantos/crud-go.git/src/controller"
+	"github.com/arilsonsantos/crud-go.git/src/model/repository"
 	"github.com/arilsonsantos/crud-go.git/src/model/service"
 	godotenv "github.com/joho/godotenv"
 	"log"
@@ -24,11 +25,17 @@ func main() {
 	fmt.Println(os.Getenv("TESTE"))
 
 	ctx := context.Background()
-	database.NewMongoDBConnection(ctx)
+	db, err := database.NewMongoDBConnection(ctx)
+	if err != nil {
+		log.Fatalf("Error trying to connect to database, error=%s", err.Error())
+		return
+	}
 
 	//Init dependencies
-	service := service.NewUserDomainService()
-	userController := controller.NewUserControllerInterface(service)
+
+	userRepository := repository.NewUserRepositoryInterface(db)
+	userDomainService := service.NewUserDomainService(userRepository)
+	userController := controller.NewUserControllerInterface(userDomainService)
 
 	router := gin.Default()
 	routes.InitRoutes(&router.RouterGroup, userController)

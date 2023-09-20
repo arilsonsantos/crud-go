@@ -9,7 +9,7 @@ func ConvertUserDomainToUserDto(
 	userDomain model.UserDomainInterface,
 ) dto.UserResponseDto {
 	return dto.UserResponseDto{
-		Id:    "",
+		Id:    userDomain.GetID(),
 		Name:  userDomain.GetName(),
 		Email: userDomain.GetEmail(),
 		Age:   userDomain.GetAge(),

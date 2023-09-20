@@ -5,6 +5,8 @@ import (
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/errors"
 	"github.com/arilsonsantos/crud-go.git/src/model"
+	"github.com/arilsonsantos/crud-go.git/src/model/repository/entity"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 )
 
@@ -20,10 +22,7 @@ func (ur *userRepositoryInterface) Create(
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
 
-	value, err := userDomainInterface.GetJsonValue()
-	if err != nil {
-		return nil, errors.InternalServerError(err.Error())
-	}
+	value := entity.UserDomainToEntity(userDomainInterface)
 
 	result, err := collection.InsertOne(context.Background(), value)
 
@@ -31,8 +30,8 @@ func (ur *userRepositoryInterface) Create(
 		return nil, errors.InternalServerError(err.Error())
 	}
 
-	userDomainInterface.SetID(result.InsertedID.(string))
+	value.ID = result.InsertedID.(primitive.ObjectID)
 
-	return userDomainInterface, nil
+	return entity.UserEntityToDomain(*value), nil
 
 }

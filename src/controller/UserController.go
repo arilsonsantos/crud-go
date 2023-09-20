@@ -14,10 +14,6 @@ import (
 	"go.uber.org/zap"
 )
 
-var (
-	UserDomainInterface model.UserDomainInterface
-)
-
 func (uc *userControllerInterface) Create(c *gin.Context) {
 	logger.Info("Init create user")
 	var userRequest dto.UserRequestDto
@@ -37,14 +33,15 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	if err := uc.service.Create(userDomain); err != nil {
+	domainResult, err := uc.service.Create(userDomain)
+	if err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
 
 	logger.Info("User added with success", zap.String("journey", "createUser"))
 
-	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(userDomain))
+	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(domainResult))
 }
 
 func (uc *userControllerInterface) Update(c *gin.Context) {}
