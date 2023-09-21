@@ -14,7 +14,9 @@ type UserEntity struct {
 }
 
 func UserDomainToEntity(domain domain.UserDomainInterface) *UserEntity {
+	id, _ := primitive.ObjectIDFromHex(domain.GetID())
 	return &UserEntity{
+		ID:       id,
 		Email:    domain.GetEmail(),
 		Password: domain.GetPassword(),
 		Name:     domain.GetName(),

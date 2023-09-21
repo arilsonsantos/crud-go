@@ -16,4 +16,6 @@ type userRepositoryInterface struct {
 
 type UserRepositoryInterface interface {
 	Create(domainInterface domain.UserDomainInterface) (domain.UserDomainInterface, *errors.ErrorDto)
+	FindByEmail(email string) (domain.UserDomainInterface, *errors.ErrorDto)
+	FindById(email string) (domain.UserDomainInterface, *errors.ErrorDto)
 }

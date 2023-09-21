@@ -17,8 +17,16 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "joao@email.com",
+  "email": "arilson@gmail.com",
   "password": "12345!",
-  "name": "José",
+  "name": "Arilson",
   "age": 1
 }
+
+### //FindById
+
+GET http://localhost:8080/users/650c4aea2e646ac671cda028
+
+### //FindByEmail
+
+GET http://localhost:8080/users/byEmail/arilson@gmail.com
