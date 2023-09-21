@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/errors"
 	"github.com/arilsonsantos/crud-go.git/src/model/domain"
@@ -11,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
-	"os"
 )
 
 var (
@@ -103,4 +104,32 @@ func (ur *userRepositoryInterface) FindById(ID string) (
 		zap.String("userRepository", "findById"),
 		zap.String("userId", userEntity.ID.Hex()))
 	return entity.UserEntityToDomain(*userEntity), nil
+}
+
+func (ur *userRepositoryInterface) Update(userId string, userDomainInterface domain.UserDomainInterface) *errors.ErrorDto {
+	logger.Info("Init update user repository")
+
+	collectionName := os.Getenv(MongodbUserCollection)
+	collection := ur.databaseConnection.Collection(collectionName)
+
+	userIdHex, err := primitive.ObjectIDFromHex(userId)
+
+	if err != nil {
+		return errors.BadRequestError("UserId is not a valid hex")
+	}
+
+	value := entity.UserDomainToEntity(userDomainInterface)
+	filter := bson.D{{Key: "_id", Value: userIdHex}}
+	update := bson.D{{Key: "$set", Value: value}}
+	_, err = collection.UpdateOne(context.Background(), filter, update)
+
+	if err != nil {
+		logger.Error("Error trying to update user", err,
+			zap.String("userid", value.ID.Hex()),
+			zap.String("UserRepository", "Update"))
+		return errors.InternalServerError(err.Error())
+	}
+
+	return nil
+
 }

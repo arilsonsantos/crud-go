@@ -25,8 +25,17 @@ Content-Type: application/json
 
 ### //FindById
 
-GET http://localhost:8080/users/650c4aea2e646ac671cda028
+GET http://localhost:8080/users/650cc3cf28e5000787352b8d
 
 ### //FindByEmail
 
 GET http://localhost:8080/users/byEmail/arilson@gmail.com
+
+### //Update
+
+PUT http://localhost:8080/users/650cc3cf28e5000787352b8d
+Content-Type: application/json
+
+{
+  "age": 47
+}

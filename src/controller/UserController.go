@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"net/mail"
+	"strings"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
@@ -46,7 +47,39 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, entity.UserDomainToEntity(domainResult))
 }
 
-func (uc *userControllerInterface) Update(c *gin.Context) {}
+func (uc *userControllerInterface) Update(c *gin.Context) {
+	logger.Info("Init update user controller", zap.String("UserController", "Update"))
+	var UserUpdateRequestDto dto.UserUpdateRequestDto
+
+	userId := c.Param("userId")
+	if err := c.ShouldBindJSON(&UserUpdateRequestDto); err != nil || strings.TrimSpace(userId) == "" {
+		logger.Error("Error trying to validate user", err, zap.String("journey", "createUser"))
+		restErr := validation.ValidateUserError(err)
+		c.JSON(restErr.Code, restErr)
+		return
+	}
+	fmt.Println(UserUpdateRequestDto)
+
+	userDomain := domain.NewUserUpdateDomain(
+		UserUpdateRequestDto.Name,
+		UserUpdateRequestDto.Age,
+	)
+
+	err := uc.userService.Update(userId, userDomain)
+	if err != nil {
+		logger.Error("Error trying to call userService update",
+			err,
+			zap.String("userService", "update"))
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("User updated with success",
+		zap.String("userId", userId),
+		zap.String("journey", "createUser"))
+
+	c.Status(http.StatusOK)
+}
 
 func (uc *userControllerInterface) Delete(c *gin.Context) {}
 
