@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
-	fmt "fmt"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/database"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/routes"
-	godotenv "github.com/joho/godotenv"
-	"log"
-	os "os"
-
+	"github.com/arilsonsantos/crud-go.git/src/controller"
+	"github.com/arilsonsantos/crud-go.git/src/model/repository"
+	"github.com/arilsonsantos/crud-go.git/src/model/service"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 )
 
 func main() {
@@ -19,7 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Deu pau!")
 	}
-	fmt.Println(os.Getenv("TESTE"))
 
 	ctx := context.Background()
 	db, err := database.NewMongoDBConnection(ctx)
@@ -28,7 +28,6 @@ func main() {
 		return
 	}
 
-	//Init dependencies
 	userController := initDependencies(db)
 
 	router := gin.Default()
@@ -37,4 +36,10 @@ func main() {
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func initDependencies(database *mongo.Database) controller.UserControllerInterface {
+	userRepository := repository.NewUserRepositoryInterface(database)
+	userDomainService := service.NewUserDomainService(userRepository)
+	return controller.NewUserControllerInterface(userDomainService)
 }
