@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/arilsonsantos/crud-go.git/src/model"
+	"github.com/arilsonsantos/crud-go.git/src/model/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -13,7 +13,7 @@ type UserEntity struct {
 	Age      int8               `bson:"age"`
 }
 
-func UserDomainToEntity(domain model.UserDomainInterface) *UserEntity {
+func UserDomainToEntity(domain domain.UserDomainInterface) *UserEntity {
 	return &UserEntity{
 		Email:    domain.GetEmail(),
 		Password: domain.GetPassword(),
@@ -22,8 +22,8 @@ func UserDomainToEntity(domain model.UserDomainInterface) *UserEntity {
 	}
 }
 
-func UserEntityToDomain(entity UserEntity) model.UserDomainInterface {
-	userDomain := model.NewUserDomain(
+func UserEntityToDomain(entity UserEntity) domain.UserDomainInterface {
+	userDomain := domain.NewUserDomain(
 		entity.Email,
 		entity.Password,
 		entity.Name,

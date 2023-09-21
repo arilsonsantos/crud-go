@@ -2,10 +2,10 @@ package controller
 
 import (
 	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/model/domain"
 	"net/http"
 
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
-	"github.com/arilsonsantos/crud-go.git/src/model"
 	"github.com/arilsonsantos/crud-go.git/src/view"
 
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
@@ -26,7 +26,7 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 	}
 	fmt.Println(userRequest)
 
-	userDomain := model.NewUserDomain(
+	userDomain := domain.NewUserDomain(
 		userRequest.Email,
 		userRequest.Password,
 		userRequest.Name,

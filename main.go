@@ -6,9 +6,6 @@ import (
 	"github.com/arilsonsantos/crud-go.git/src/configuration/database"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/routes"
-	"github.com/arilsonsantos/crud-go.git/src/controller"
-	"github.com/arilsonsantos/crud-go.git/src/model/repository"
-	"github.com/arilsonsantos/crud-go.git/src/model/service"
 	godotenv "github.com/joho/godotenv"
 	"log"
 	os "os"
@@ -32,10 +29,7 @@ func main() {
 	}
 
 	//Init dependencies
-
-	userRepository := repository.NewUserRepositoryInterface(db)
-	userDomainService := service.NewUserDomainService(userRepository)
-	userController := controller.NewUserControllerInterface(userDomainService)
+	userController := initDependencies(db)
 
 	router := gin.Default()
 	routes.InitRoutes(&router.RouterGroup, userController)

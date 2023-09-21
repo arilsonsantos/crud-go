@@ -2,16 +2,12 @@ package repository
 
 import (
 	"github.com/arilsonsantos/crud-go.git/src/errors"
-	"github.com/arilsonsantos/crud-go.git/src/model"
+	"github.com/arilsonsantos/crud-go.git/src/model/domain"
 	mongo "go.mongodb.org/mongo-driver/mongo"
 )
 
-func NewUserRepositoryInterface(
-	database *mongo.Database,
-) UserRepositoryInterface {
-	return &userRepositoryInterface{
-		database,
-	}
+func NewUserRepositoryInterface(database *mongo.Database) UserRepositoryInterface {
+	return &userRepositoryInterface{database}
 }
 
 type userRepositoryInterface struct {
@@ -19,5 +15,5 @@ type userRepositoryInterface struct {
 }
 
 type UserRepositoryInterface interface {
-	Create(domainInterface model.UserDomainInterface) (model.UserDomainInterface, *errors.ErrorDto)
+	Create(domainInterface domain.UserDomainInterface) (domain.UserDomainInterface, *errors.ErrorDto)
 }
