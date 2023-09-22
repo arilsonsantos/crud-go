@@ -29,7 +29,7 @@ func (uc *userControllerInterface) FindUserLogin(c *gin.Context) {
 		userLogin.Password,
 	)
 
-	domainResult, err := uc.userService.LoginUserService(userLoginDomain)
+	domainResult, token, err := uc.userService.LoginUserService(userLoginDomain)
 	if err != nil {
 		c.JSON(err.Code, err)
 		return
@@ -37,5 +37,6 @@ func (uc *userControllerInterface) FindUserLogin(c *gin.Context) {
 
 	logger.Info("User login found with success", zap.String("UserLoginController", "FindUserLogin"))
 
+	c.Header("x-token", token)
 	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(domainResult))
 }

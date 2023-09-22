@@ -8,14 +8,19 @@ import (
 )
 
 func (ud *userDomainService) LoginUserService(userDomain domain.UserDomainInterface) (
-	domain.UserDomainInterface, *errors.ErrorDto,
+	domain.UserDomainInterface, string, *errors.ErrorDto,
 ) {
 	logger.Info("Init login user domain/service.", zap.String("service", "LoginUserService"))
 
 	userDomain.EncryptPassword()
 	user, err := ud.findByEmailAndPassword(userDomain.GetEmail(), userDomain.GetPassword())
 	if user == nil {
-		return nil, err
+		return nil, "", err
+	}
+
+	token, err := user.GenerateToken()
+	if err != nil {
+		return nil, "", err
 	}
 
 	logger.Info(
@@ -23,5 +28,5 @@ func (ud *userDomainService) LoginUserService(userDomain domain.UserDomainInterf
 		zap.String("userId", user.GetID()),
 		zap.String("journey", "LoginUserService"))
 
-	return user, nil
+	return user, token, nil
 }

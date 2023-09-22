@@ -12,14 +12,14 @@ Content-Type: application/json
 }
 
 
-### //Ok
+### //Create
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "joao03@gmail.com",
+  "email": "joao04@gmail.com",
   "password": "12345!",
-  "name": "Joao 03",
+  "name": "Joao 04",
   "age": 20
 }
 

@@ -22,5 +22,5 @@ type UserDomainServiceInterface interface {
 	FindById(id string) (domain.UserDomainInterface, *errors.ErrorDto)
 	Update(string, domain.UserDomainInterface) *errors.ErrorDto
 	Delete(string) *errors.ErrorDto
-	LoginUserService(domainInterface domain.UserDomainInterface) (domain.UserDomainInterface, *errors.ErrorDto)
+	LoginUserService(domainInterface domain.UserDomainInterface) (domain.UserDomainInterface, string, *errors.ErrorDto)
 }

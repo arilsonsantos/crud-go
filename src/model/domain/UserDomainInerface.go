@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/arilsonsantos/crud-go.git/src/errors"
+
 type UserDomainInterface interface {
 	GetEmail() string
 	GetPassword() string
@@ -8,4 +10,5 @@ type UserDomainInterface interface {
 	EncryptPassword()
 	SetID(string2 string)
 	GetID() string
+	GenerateToken() (string, *errors.ErrorDto)
 }
