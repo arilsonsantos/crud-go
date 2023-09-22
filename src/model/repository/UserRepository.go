@@ -112,16 +112,12 @@ func (ur *userRepositoryInterface) Update(userId string, userDomainInterface dom
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
 
-	userIdHex, err := primitive.ObjectIDFromHex(userId)
-
-	if err != nil {
-		return errors.BadRequestError("UserId is not a valid hex")
-	}
-
+	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 	value := entity.UserDomainToEntity(userDomainInterface)
 	filter := bson.D{{Key: "_id", Value: userIdHex}}
 	update := bson.D{{Key: "$set", Value: value}}
-	_, err = collection.UpdateOne(context.Background(), filter, update)
+
+	_, err := collection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		logger.Error("Error trying to update user", err,

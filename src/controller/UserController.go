@@ -2,19 +2,17 @@ package controller
 
 import (
 	"fmt"
-	"github.com/arilsonsantos/crud-go.git/src/errors"
-	"github.com/arilsonsantos/crud-go.git/src/model/domain"
-	"github.com/arilsonsantos/crud-go.git/src/model/repository/entity"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"net/http"
-	"net/mail"
-	"strings"
-
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
+	"github.com/arilsonsantos/crud-go.git/src/errors"
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
+	"github.com/arilsonsantos/crud-go.git/src/model/domain"
+	"github.com/arilsonsantos/crud-go.git/src/model/repository/entity"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
+	"net/http"
+	"net/mail"
 )
 
 func (uc *userControllerInterface) Create(c *gin.Context) {
@@ -51,14 +49,18 @@ func (uc *userControllerInterface) Update(c *gin.Context) {
 	logger.Info("Init update user controller", zap.String("UserController", "Update"))
 	var UserUpdateRequestDto dto.UserUpdateRequestDto
 
-	userId := c.Param("userId")
-	if err := c.ShouldBindJSON(&UserUpdateRequestDto); err != nil || strings.TrimSpace(userId) == "" {
+	if err := c.ShouldBindJSON(&UserUpdateRequestDto); err != nil {
 		logger.Error("Error trying to validate user", err, zap.String("journey", "createUser"))
 		restErr := validation.ValidateUserError(err)
 		c.JSON(restErr.Code, restErr)
 		return
 	}
-	fmt.Println(UserUpdateRequestDto)
+
+	userId := c.Param("userId")
+	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
+		errorRest := errors.BadRequestError("Invalid userId, must be a Hex value")
+		c.JSON(errorRest.Code, errorRest)
+	}
 
 	userDomain := domain.NewUserUpdateDomain(
 		UserUpdateRequestDto.Name,
