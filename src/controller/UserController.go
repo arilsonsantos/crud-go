@@ -43,7 +43,7 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 
 	logger.Info("User added with success", zap.String("journey", "createUser"))
 
-	c.JSON(http.StatusCreated, entity.UserDomainToEntity(domainResult))
+	c.JSON(http.StatusCreated, view.ConvertUserDomainToUserDto(domainResult))
 }
 
 func (uc *userControllerInterface) Update(c *gin.Context) {

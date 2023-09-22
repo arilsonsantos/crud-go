@@ -18,3 +18,8 @@ func (ud *userDomainService) FindById(id string) (
 	logger.Info("Init find user domain/service.", zap.String("FindUserService", "FindById"))
 	return ud.userRepository.FindById(id)
 }
+
+func (ud *userDomainService) findByEmailAndPassword(email string, password string) (domain.UserDomainInterface, *errors.ErrorDto) {
+	logger.Info("Init find user by email/senha domain/service.", zap.String("LoginUserService", "findByEmailAndPassword"))
+	return ud.userRepository.FindByEmailAndPassword(email, password)
+}

@@ -17,15 +17,15 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "arilsonsantos@gmail.com",
+  "email": "joao03@gmail.com",
   "password": "12345!",
-  "name": "Arilson Santos",
-  "age": 1
+  "name": "Joao 03",
+  "age": 20
 }
 
 ### //FindById
 
-GET http://localhost:8080/users/650ce5e913e3a10ba38dad5e
+GET http://localhost:8080/users/650da647b2526e00b9867262
 
 ### //FindByEmail
 
@@ -40,7 +40,13 @@ Content-Type: application/json
   "age": 47
 }
 
-### //Delete
+### //Login
 
-DELETE http://localhost:8080/users/650ce5e913e3a10ba38dad5e
+POST http://localhost:8080/login/
+Content-Type: application/json
+
+{
+  "email": "joao03@gmail.com",
+  "password": "12345!"
+}
 

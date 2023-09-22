@@ -150,3 +150,38 @@ func (ur *userRepositoryInterface) Delete(userId string) *errors.ErrorDto {
 	return nil
 
 }
+
+func (ur *userRepositoryInterface) FindByEmailAndPassword(email string, password string) (
+	domain.UserDomainInterface, *errors.ErrorDto) {
+
+	logger.Info("Init findByEmailAndPassword user repository", zap.String("userRepository", "FindByEmailAndPassword"))
+
+	collectionName := os.Getenv(MongodbUserCollection)
+	collection := ur.databaseConnection.Collection(collectionName)
+
+	userEntity := &entity.UserEntity{}
+	filter := bson.D{
+		{Key: "email", Value: email},
+		{Key: "password", Value: password},
+	}
+	err := collection.FindOne(
+		context.Background(),
+		filter).Decode(userEntity)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := "Email or password is invalid."
+			logger.Error(errorMessage, err, zap.String("userRepository", "FindByEmailAndPassword"))
+			return nil, errors.ForbiddenError(errorMessage)
+		}
+		errorMessage := "Error trying to find user login by email and password"
+		logger.Error(errorMessage, err, zap.String("userRepository", "FindByEmailAndPassword"))
+		return nil, errors.InternalServerError(errorMessage)
+	}
+
+	logger.Info("User login found successfully",
+		zap.String("userRepository", "FindByEmailAndPassword"),
+		zap.String("userId", userEntity.ID.Hex()),
+		zap.String("Email", userEntity.Email))
+	return entity.UserEntityToDomain(*userEntity), nil
+}
