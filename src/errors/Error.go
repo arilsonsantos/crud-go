@@ -52,6 +52,14 @@ func InternalServerError(message string) *ErrorDto {
 	}
 }
 
+func UnauthorizedError(message string) *ErrorDto {
+	return &ErrorDto{
+		Message: message,
+		Err:     "Unauthorized Error",
+		Code:    http.StatusUnauthorized,
+	}
+}
+
 func NotFoundError(message string) *ErrorDto {
 	return &ErrorDto{
 		Message: message,

@@ -112,11 +112,6 @@ func (uc *userControllerInterface) Delete(c *gin.Context) {
 func (uc *userControllerInterface) FindById(c *gin.Context) {
 	logger.Info("Init findById user controller", zap.String("UserController", "FindById"))
 
-	err, done := validationToken(c)
-	if done {
-		return
-	}
-
 	userId := c.Param("userId")
 
 	//if _, err := uuid.Parse(userId); err != nil {
@@ -141,11 +136,6 @@ func (uc *userControllerInterface) FindById(c *gin.Context) {
 func (uc *userControllerInterface) FindByEmail(c *gin.Context) {
 	logger.Info("Init findById user controller", zap.String("UserController", "FindByEmail"))
 
-	err, done := validationToken(c)
-	if done {
-		return
-	}
-
 	userEmail := c.Param("userEmail")
 
 	if _, err := mail.ParseAddress(userEmail); err != nil {
@@ -164,17 +154,4 @@ func (uc *userControllerInterface) FindByEmail(c *gin.Context) {
 	logger.Info("User found successfully.", zap.String("UserController", "FindByEmail"))
 
 	c.JSON(http.StatusOK, entity.UserDomainToEntity(userDomain))
-}
-
-func validationToken(c *gin.Context) (*errors.ErrorDto, bool) {
-	xToken := c.Request.Header.Get("X-Token")
-
-	user, err := domain.VerifyToken(xToken)
-	if err != nil {
-		c.JSON(err.Code, err)
-		return nil, true
-	}
-
-	logger.Info(fmt.Sprintf("User authenticated: %#v", user))
-	return err, false
 }

@@ -2,7 +2,9 @@ package domain
 
 import (
 	"fmt"
+	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/errors"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"os"
 	"strings"
@@ -25,7 +27,6 @@ func (ud *userDomain) GenerateToken() (string, *errors.ErrorDto) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	tokenString, err := token.SignedString([]byte(secret))
 
 	if err != nil {
@@ -35,11 +36,11 @@ func (ud *userDomain) GenerateToken() (string, *errors.ErrorDto) {
 	}
 
 	return tokenString, nil
-
 }
 
-func VerifyToken(tokenValue string) (UserDomainInterface, *errors.ErrorDto) {
+func VerifyTokenMiddleware(c *gin.Context) {
 	secret := os.Getenv(JwtSecretKey)
+	tokenValue := RemoveBearerPrefix(c.Request.Header.Get("X-Token"))
 	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue),
 		func(token *jwt.Token) (interface {
 		}, error) {
@@ -49,23 +50,22 @@ func VerifyToken(tokenValue string) (UserDomainInterface, *errors.ErrorDto) {
 			return nil, errors.BadRequestError("Invalid token")
 		})
 
-	if err != nil {
-		//TODO Unauthorized
-		return nil, errors.BadRequestError("Invalid token")
-	}
-
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
-		//TODO Unauthorized
-		return nil, errors.BadRequestError("Invalid token")
+	if err != nil || !ok || !token.Valid {
+		errorRest := errors.UnauthorizedError("Invalid token")
+		c.JSON(errorRest.Code, errorRest)
+		c.Abort()
+		return
 	}
 
-	return &userDomain{
+	userDomain := userDomain{
 		id:    claims["id"].(string),
 		email: claims["email"].(string),
 		name:  claims["name"].(string),
 		age:   int8(claims["age"].(float64)),
-	}, nil
+	}
+
+	logger.Info(fmt.Sprintf("User authenticated: %#v", userDomain))
 }
 
 func RemoveBearerPrefix(token string) string {
