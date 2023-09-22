@@ -129,3 +129,24 @@ func (ur *userRepositoryInterface) Update(userId string, userDomainInterface dom
 	return nil
 
 }
+
+func (ur *userRepositoryInterface) Delete(userId string) *errors.ErrorDto {
+	logger.Info("Init delete user repository")
+
+	collectionName := os.Getenv(MongodbUserCollection)
+	collection := ur.databaseConnection.Collection(collectionName)
+
+	userIdHex, _ := primitive.ObjectIDFromHex(userId)
+	filter := bson.D{{Key: "_id", Value: userIdHex}}
+	_, err := collection.DeleteOne(context.Background(), filter)
+
+	if err != nil {
+		logger.Error("Error trying to delete user", err,
+			zap.String("userid", userId),
+			zap.String("UserRepository", "Update"))
+		return errors.InternalServerError(err.Error())
+	}
+
+	return nil
+
+}

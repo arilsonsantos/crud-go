@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### //FindById
 
-GET http://localhost:8080/users/650cc3cf28e5000787352b8d
+GET http://localhost:8080/users/650ce5e913e3a10ba38dad5e
 
 ### //FindByEmail
 
@@ -39,3 +39,8 @@ Content-Type: application/json
 {
   "age": 47
 }
+
+### //Delete
+
+DELETE http://localhost:8080/users/650ce5e913e3a10ba38dad5e
+

@@ -19,4 +19,5 @@ type UserRepositoryInterface interface {
 	FindByEmail(email string) (domain.UserDomainInterface, *errors.ErrorDto)
 	FindById(email string) (domain.UserDomainInterface, *errors.ErrorDto)
 	Update(userId string, userDomainInterface domain.UserDomainInterface) *errors.ErrorDto
+	Delete(userId string) *errors.ErrorDto
 }

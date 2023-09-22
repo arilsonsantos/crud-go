@@ -83,7 +83,30 @@ func (uc *userControllerInterface) Update(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func (uc *userControllerInterface) Delete(c *gin.Context) {}
+func (uc *userControllerInterface) Delete(c *gin.Context) {
+	logger.Info("Init delete user controller", zap.String("UserController", "Delete"))
+
+	userId := c.Param("userId")
+	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
+		errorRest := errors.BadRequestError("Invalid userId, must be a Hex value")
+		c.JSON(errorRest.Code, errorRest)
+	}
+
+	err := uc.userService.Delete(userId)
+	if err != nil {
+		logger.Error("Error trying to call userService delete",
+			err,
+			zap.String("userService", "delete"))
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("User deleted with success",
+		zap.String("userId", userId),
+		zap.String("journey", "createUser"))
+
+	c.Status(http.StatusOK)
+}
 
 func (uc *userControllerInterface) FindById(c *gin.Context) {
 	logger.Info("Init findById user controller", zap.String("UserController", "FindById"))
