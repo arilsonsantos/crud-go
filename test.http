@@ -1,5 +1,3 @@
-GET http://localhost:8080/users/1
-
 ### //Bad Request
 POST http://localhost:8080/users
 Content-Type: application/json
@@ -24,15 +22,16 @@ Content-Type: application/json
 }
 
 ### //FindById
-
-GET http://localhost:8080/users/650da647b2526e00b9867262
+GET http://localhost:8080/users/650df2f270e8bfb20b2d380b
+Accept: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOjIwLCJlbWFpbCI6ImpvYW8wNEBnbWFpbC5jb20iLCJleHAiOjE2OTU0MTM3MjgsImlkIjoiNjUwZGYyZjI3MGU4YmZiMjBiMmQzODBiIiwibmFtZSI6IkpvYW8gMDQifQ.sA6xpkBpCI9D5x0PSup1gbeUBr3K_MVbVR03uQdjI4c
 
 ### //FindByEmail
-
-GET http://localhost:8080/users/byEmail/arilson@gmail.com
+GET http://localhost:8080/users/byEmail/joao04@gmail.com
+Accept: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOjIwLCJlbWFpbCI6ImpvYW8wNEBnbWFpbC5jb20iLCJleHAiOjE2OTU0MTM3MjgsImlkIjoiNjUwZGYyZjI3MGU4YmZiMjBiMmQzODBiIiwibmFtZSI6IkpvYW8gMDQifQ.sA6xpkBpCI9D5x0PSup1gbeUBr3K_MVbVR03uQdjI4c
 
 ### //Update
-
 PUT http://localhost:8080/users/650cc3cf28e5000787352b8d
 Content-Type: application/json
 
@@ -41,12 +40,11 @@ Content-Type: application/json
 }
 
 ### //Login
-
 POST http://localhost:8080/login/
 Content-Type: application/json
 
 {
-  "email": "joao03@gmail.com",
+  "email": "joao04@gmail.com",
   "password": "12345!"
 }
 
