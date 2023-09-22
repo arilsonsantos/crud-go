@@ -8,6 +8,7 @@ import (
 	"github.com/arilsonsantos/crud-go.git/src/errors/validation"
 	"github.com/arilsonsantos/crud-go.git/src/model/domain"
 	"github.com/arilsonsantos/crud-go.git/src/model/repository/entity"
+	"github.com/arilsonsantos/crud-go.git/src/view"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
@@ -129,7 +130,7 @@ func (uc *userControllerInterface) FindById(c *gin.Context) {
 
 	logger.Info("User found successfully.", zap.String("UserController", "FindById"))
 
-	c.JSON(http.StatusOK, entity.UserDomainToEntity(userDomain))
+	c.JSON(http.StatusOK, view.ConvertUserDomainToUserDto(userDomain))
 }
 
 func (uc *userControllerInterface) FindByEmail(c *gin.Context) {
