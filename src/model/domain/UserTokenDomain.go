@@ -23,7 +23,7 @@ func (ud *userDomain) GenerateToken() (string, *errors.ErrorDto) {
 		"name":  ud.name,
 		"email": ud.email,
 		"age":   ud.age,
-		"exp":   time.Now().Add(time.Minute * 5).Unix(),
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -50,11 +50,15 @@ func VerifyTokenMiddleware(c *gin.Context) {
 			return nil, errors.BadRequestError("Invalid token")
 		})
 
+	if err != nil {
+		getUnauthorizedError(c)
+		return
+	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if err != nil || !ok || !token.Valid {
-		errorRest := errors.UnauthorizedError("Invalid token")
-		c.JSON(errorRest.Code, errorRest)
-		c.Abort()
+
+	if !ok || !token.Valid {
+		getUnauthorizedError(c)
 		return
 	}
 
@@ -66,6 +70,13 @@ func VerifyTokenMiddleware(c *gin.Context) {
 	}
 
 	logger.Info(fmt.Sprintf("User authenticated: %#v", userDomain))
+}
+
+func getUnauthorizedError(c *gin.Context) {
+	errorRest := errors.UnauthorizedError("Invalid token")
+	c.JSON(errorRest.Code, errorRest)
+	c.Abort()
+	return
 }
 
 func RemoveBearerPrefix(token string) string {

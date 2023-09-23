@@ -26,9 +26,7 @@ func (ur *userRepositoryInterface) Create(userDomainInterface domain.UserDomainI
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	value := entity.UserDomainToEntity(userDomainInterface)
-
 	result, err := collection.InsertOne(context.Background(), value)
 
 	if err != nil {
@@ -38,7 +36,6 @@ func (ur *userRepositoryInterface) Create(userDomainInterface domain.UserDomainI
 	value.ID = result.InsertedID.(primitive.ObjectID)
 
 	return entity.UserEntityToDomain(*value), nil
-
 }
 
 func (ur *userRepositoryInterface) FindByEmail(email string) (
@@ -48,7 +45,6 @@ func (ur *userRepositoryInterface) FindByEmail(email string) (
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	userEntity := &entity.UserEntity{}
 	filter := bson.D{{Key: "email", Value: email}}
 	err := collection.FindOne(
@@ -80,9 +76,7 @@ func (ur *userRepositoryInterface) FindById(ID string) (
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	userEntity := &entity.UserEntity{}
-	//filter := bson.D{{Key: "ID", Value: ID}}
 	objectId, _ := primitive.ObjectIDFromHex(ID)
 	filter := bson.D{{Key: "_id", Value: objectId}}
 	err := collection.FindOne(
@@ -111,23 +105,21 @@ func (ur *userRepositoryInterface) Update(userId string, userDomainInterface dom
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 	value := entity.UserDomainToEntity(userDomainInterface)
 	filter := bson.D{{Key: "_id", Value: userIdHex}}
 	update := bson.D{{Key: "$set", Value: value}}
-
 	_, err := collection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
-		logger.Error("Error trying to update user", err,
+		errorMessage := "Error trying to update user"
+		logger.Error(errorMessage, err,
 			zap.String("userid", value.ID.Hex()),
 			zap.String("UserRepository", "Update"))
-		return errors.InternalServerError(err.Error())
+		return errors.InternalServerError(errorMessage)
 	}
 
 	return nil
-
 }
 
 func (ur *userRepositoryInterface) Delete(userId string) *errors.ErrorDto {
@@ -135,30 +127,27 @@ func (ur *userRepositoryInterface) Delete(userId string) *errors.ErrorDto {
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 	filter := bson.D{{Key: "_id", Value: userIdHex}}
 	_, err := collection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
-		logger.Error("Error trying to delete user", err,
+		errorMessage := "Error trying to delete user"
+		logger.Error(errorMessage, err,
 			zap.String("userid", userId),
 			zap.String("UserRepository", "Update"))
-		return errors.InternalServerError(err.Error())
+		return errors.InternalServerError(errorMessage)
 	}
 
 	return nil
-
 }
 
 func (ur *userRepositoryInterface) FindByEmailAndPassword(email string, password string) (
 	domain.UserDomainInterface, *errors.ErrorDto) {
-
 	logger.Info("Init findByEmailAndPassword user repository", zap.String("userRepository", "FindByEmailAndPassword"))
 
 	collectionName := os.Getenv(MongodbUserCollection)
 	collection := ur.databaseConnection.Collection(collectionName)
-
 	userEntity := &entity.UserEntity{}
 	filter := bson.D{
 		{Key: "email", Value: email},
@@ -178,10 +167,10 @@ func (ur *userRepositoryInterface) FindByEmailAndPassword(email string, password
 		logger.Error(errorMessage, err, zap.String("userRepository", "FindByEmailAndPassword"))
 		return nil, errors.InternalServerError(errorMessage)
 	}
-
 	logger.Info("User login found successfully",
 		zap.String("userRepository", "FindByEmailAndPassword"),
 		zap.String("userId", userEntity.ID.Hex()),
 		zap.String("Email", userEntity.Email))
+
 	return entity.UserEntityToDomain(*userEntity), nil
 }
