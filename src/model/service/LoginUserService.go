@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ud *userDomainService) LoginUserService(userDomain domain.UserDomainInterface) (
+func (ud *userDomainService) loginUserService(userDomain domain.UserDomainInterface) (
 	domain.UserDomainInterface, string, *errors.ErrorDto,
 ) {
 	logger.Info("Init login user domain/service.", zap.String("service", "LoginUserService"))
