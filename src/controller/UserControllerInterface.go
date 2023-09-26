@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewUserControllerInterface(serviceInterface service.UserDomainService) UserControllerInterface {
+func NewUserControllerInterface(serviceInterface service.UserDomainServiceInterface) UserControllerInterface {
 	return &userControllerInterface{
-		service: serviceInterface,
+		userService: serviceInterface,
 	}
 }
 
@@ -17,8 +17,9 @@ type UserControllerInterface interface {
 	FindByEmail(c *gin.Context)
 	Delete(c *gin.Context)
 	Update(c *gin.Context)
+	FindUserLogin(c *gin.Context)
 }
 
 type userControllerInterface struct {
-	service service.UserDomainService
+	userService service.UserDomainServiceInterface
 }

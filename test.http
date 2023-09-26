@@ -1,24 +1,50 @@
-GET http://localhost:8080/users/1
-
 ### //Bad Request
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
   "email": "email@email.com",
-  "password": "1234!",
+  "password": "123456",
   "name": "Joao",
   "age": 1
 }
 
 
-### //Ok
+### //Create
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "joao@email.com",
+  "email": "joao04@gmail.com",
   "password": "12345!",
-  "name": "Joao",
-  "age": 1
+  "name": "Joao 04",
+  "age": 20
 }
+
+### //FindById
+GET http://localhost:8080/users/650df2f270e8bfb20b2d380b
+Accept: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOjIwLCJlbWFpbCI6ImpvYW8wNEBnbWFpbC5jb20iLCJleHAiOjE2OTU0MTY5NjQsImlkIjoiNjUwZGYyZjI3MGU4YmZiMjBiMmQzODBiIiwibmFtZSI6IkpvYW8gMDQifQ.QQfvqUSsAw2ner0hjnM3x_KyHuyKmOHpBD2wv-Lam3w
+
+### //FindByEmail
+GET http://localhost:8080/users/byEmail/joao04@gmail.com
+Accept: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOjIwLCJlbWFpbCI6ImpvYW8wNEBnbWFpbC5jb20iLCJleHAiOjE2OTU0MTY5NjQsImlkIjoiNjUwZGYyZjI3MGU4YmZiMjBiMmQzODBiIiwibmFtZSI6IkpvYW8gMDQifQ.QQfvqUSsAw2ner0hjnM3x_KyHuyKmOHpBD2wv-Lam3w
+
+### //Update
+PUT http://localhost:8080/users/650cc3cf28e5000787352b8d
+Content-Type: application/json
+
+{
+  "age": 47
+}
+
+### //Login
+POST http://localhost:8080/login/
+Content-Type: application/json
+
+{
+  "email": "joao04@gmail.com",
+  "password": "12345!"
+}
+
