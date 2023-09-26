@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	//Validate = validator.New()
+	// Validate = validator.New()
 	transl ut.Translator
 )
 
@@ -41,6 +41,7 @@ func ValidateUserError(validationErr error) *errors2.ErrorDto {
 				Field:   e.Field(),
 				Message: e.Translate(transl),
 			}
+
 			errorsCauses = append(errorsCauses, cause)
 		}
 		return errors2.BadRequestCauseError("Some fields are invalid.", errorsCauses)
