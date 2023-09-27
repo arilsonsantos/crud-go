@@ -5,9 +5,9 @@ name: Go
 
 on:
   push:
-    branches: [ "develop" ]
-#  pull_request:
-#    types: [ opened, synchronize, reopened ]
+    branches: [ "master" ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
 
 jobs:
 
