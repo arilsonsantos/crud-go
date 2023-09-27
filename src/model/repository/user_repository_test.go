@@ -12,6 +12,10 @@ import (
 	"testing"
 )
 
+var testEmail = "test@email.com"
+var testName = "John Test"
+var testAge int8 = 42
+
 func TestUserRepositoryInterface_Create(t *testing.T) {
 	mtestDb, databaseName, _ := getDataBaseTest(t)
 
@@ -24,17 +28,17 @@ func TestUserRepositoryInterface_Create(t *testing.T) {
 
 		databaseMock := mt.Client.Database(databaseName)
 		repo := NewUserRepositoryInterface(databaseMock)
-		userDomain := domain.NewUserDomain("teste@teste.com", "123", "Joao", 20)
+		userDomain := domain.NewUserDomain(testEmail, "123", testName, testAge)
 		userDomain, err := repo.Create(userDomain)
 		id, errId := primitive.ObjectIDFromHex(userDomain.GetID())
 
 		assert.Nil(t, err)
 		assert.Nil(t, errId)
 		assert.NotNil(t, id)
-		assert.EqualValues(t, userDomain.GetEmail(), "teste@teste.com")
+		assert.EqualValues(t, userDomain.GetEmail(), testEmail)
 		assert.EqualValues(t, userDomain.GetPassword(), "123")
-		assert.EqualValues(t, userDomain.GetName(), "Joao")
-		assert.EqualValues(t, userDomain.GetAge(), 20)
+		assert.EqualValues(t, userDomain.GetName(), testName)
+		assert.EqualValues(t, userDomain.GetAge(), testAge)
 	})
 
 	mtestDb.Run("error from database", func(mt *mtest.T) {
@@ -44,7 +48,7 @@ func TestUserRepositoryInterface_Create(t *testing.T) {
 
 		databaseMock := mt.Client.Database(databaseName)
 		repo := NewUserRepositoryInterface(databaseMock)
-		userDomain := domain.NewUserDomain("teste@teste.com", "123", "Joao", 20)
+		userDomain := domain.NewUserDomain(testEmail, "123", testName, testAge)
 		userDomainReturn, _ := repo.Create(userDomain)
 
 		assert.Nil(t, userDomainReturn)
@@ -278,13 +282,13 @@ func TestUserRepositoryInterface_Update(t *testing.T) {
 
 		databaseMock := mt.Client.Database(databaseName)
 		repo := NewUserRepositoryInterface(databaseMock)
-		userDomain := domain.NewUserUpdateDomain("Joao", 20)
+		userDomain := domain.NewUserUpdateDomain(testName, testAge)
 		userDomain.SetID(primitive.NewObjectID().Hex())
 		err := repo.Update(userDomain.GetID(), userDomain)
 
 		assert.Nil(t, err)
-		assert.EqualValues(t, userDomain.GetName(), "Joao")
-		assert.EqualValues(t, userDomain.GetAge(), 20)
+		assert.EqualValues(t, userDomain.GetName(), testName)
+		assert.EqualValues(t, userDomain.GetAge(), testAge)
 	})
 
 	mTestDb.Run("error from database", func(mt *mtest.T) {
@@ -294,7 +298,7 @@ func TestUserRepositoryInterface_Update(t *testing.T) {
 
 		databaseMock := mt.Client.Database(databaseName)
 		repo := NewUserRepositoryInterface(databaseMock)
-		userDomain := domain.NewUserUpdateDomain("Joao", 20)
+		userDomain := domain.NewUserUpdateDomain(testName, testAge)
 		userDomain.SetID(primitive.NewObjectID().Hex())
 		err := repo.Update(userDomain.GetID(), userDomain)
 

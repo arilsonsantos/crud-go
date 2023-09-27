@@ -22,18 +22,18 @@ func TestUserDomainService_FindById(t *testing.T) {
 
 	t.Run("findById_success", func(t *testing.T) {
 		repository.EXPECT().FindById("123").Return(domain.NewUserDomain(
-			"teste@email", "123", "Teste", 42), nil)
+			testEmail, testPassword, testName, testAge), nil)
 
-		user, err := service.FindById("123")
+		user, err := service.FindById(testPassword)
 
 		assert.Nil(t, err)
-		assert.EqualValues(t, user.GetEmail(), "teste@email")
+		assert.EqualValues(t, user.GetEmail(), testEmail)
 	})
 
 	t.Run("findBydId_not_found", func(t *testing.T) {
-		repository.EXPECT().FindById("123").Return(nil, errors.NotFoundError("User not found with this ID: 123"))
+		repository.EXPECT().FindById(testPassword).Return(nil, errors.NotFoundError("User not found with this ID: 123"))
 
-		_, err := service.FindById("123")
+		_, err := service.FindById(testPassword)
 
 		assert.NotNil(t, err)
 		assert.EqualValues(t, err.Code, http.StatusNotFound)
@@ -49,19 +49,19 @@ func TestUserDomainService_FindEmail(t *testing.T) {
 	service := NewUserDomainService(repository)
 
 	t.Run("findByEmail_success", func(t *testing.T) {
-		repository.EXPECT().FindByEmail("teste@email").Return(domain.NewUserDomain(
-			"teste@email", "123", "Teste", 42), nil)
+		repository.EXPECT().FindByEmail(testEmail).Return(domain.NewUserDomain(
+			testEmail, testPassword, "Teste", 42), nil)
 
-		user, err := service.FindByEmail("teste@email")
+		user, err := service.FindByEmail(testEmail)
 
 		assert.Nil(t, err)
-		assert.EqualValues(t, user.GetEmail(), "teste@email")
+		assert.EqualValues(t, user.GetEmail(), testEmail)
 	})
 
 	t.Run("findByEmail_not_found", func(t *testing.T) {
-		repository.EXPECT().FindByEmail("teste@email").Return(nil, errors.NotFoundError("User not found with this email: test@email"))
+		repository.EXPECT().FindByEmail(testEmail).Return(nil, errors.NotFoundError("User not found with this email: test@email"))
 
-		_, err := service.FindByEmail("teste@email")
+		_, err := service.FindByEmail(testEmail)
 
 		assert.NotNil(t, err)
 		assert.EqualValues(t, err.Code, http.StatusNotFound)
@@ -79,7 +79,7 @@ func TestUserDomainService_FindByUserAndPassword(t *testing.T) {
 
 	t.Run("find_user_by_email_and_password_with_success", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		email := "test@email.com"
+		email := testEmail
 		password := strconv.FormatInt(rand.Int63(), 10)
 
 		userDomain := domain.NewUserDomain(email, password, "Test Name", 42)
@@ -99,7 +99,7 @@ func TestUserDomainService_FindByUserAndPassword(t *testing.T) {
 	})
 
 	t.Run("find_user_by_email_and_password_not_found", func(t *testing.T) {
-		email := "test@email.com"
+		email := testEmail
 		password := strconv.FormatInt(rand.Int63(), 10)
 
 		repository.EXPECT().FindByEmailAndPassword(email, password).Return(nil, errors.NotFoundError("User not found."))

@@ -10,6 +10,11 @@ import (
 	"testing"
 )
 
+var testName = "John Test"
+var testPassword = "123"
+var testAge int8 = 42
+var errorMessage = "Error trying to find user by email and password."
+
 func TestUserDomainService_LoginUserService(t *testing.T) {
 	control := gomock.NewController(t)
 	defer control.Finish()
@@ -19,23 +24,23 @@ func TestUserDomainService_LoginUserService(t *testing.T) {
 
 	t.Run("login_user_with_error_using_gomock", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testPassword, testName, testAge)
 		userDomain.SetID(id)
 
 		repository.EXPECT().FindByEmailAndPassword(
 			userDomain.GetEmail(), gomock.Any()).Return(nil, errors.InternalServerError(
-			"Error trying to find user by email and password."))
+			errorMessage))
 		user, token, err := service.LoginUserService(userDomain)
 
 		assert.Nil(t, user)
 		assert.Empty(t, token)
 		assert.NotNil(t, err)
-		assert.EqualValues(t, err.Message, "Error trying to find user by email and password.")
+		assert.EqualValues(t, err.Message, errorMessage)
 	})
 
 	t.Run("login_user_with_error", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testPassword, testName, testAge)
 		userDomain.SetID(id)
 
 		userDomainMock := domain.NewUserDomain(userDomain.GetEmail(), userDomain.GetPassword(), userDomain.GetName(), userDomain.GetAge())
@@ -43,24 +48,24 @@ func TestUserDomainService_LoginUserService(t *testing.T) {
 
 		repository.EXPECT().FindByEmailAndPassword(
 			userDomain.GetEmail(), userDomainMock.GetPassword()).Return(nil, errors.InternalServerError(
-			"Error trying to find user by email and password."))
+			errorMessage))
 		user, token, err := service.LoginUserService(userDomain)
 
 		assert.Nil(t, user)
 		assert.Empty(t, token)
 		assert.NotNil(t, err)
-		assert.EqualValues(t, err.Message, "Error trying to find user by email and password.")
+		assert.EqualValues(t, err.Message, errorMessage)
 	})
 
 	t.Run("login_user_when_generate_token_error", func(t *testing.T) {
 		mockUserDomainInterce := mocks.NewMockUserDomainInterface(control)
-		mockUserDomainInterce.EXPECT().GetEmail().Return("test@email.com")
-		mockUserDomainInterce.EXPECT().GetPassword().Return("123")
+		mockUserDomainInterce.EXPECT().GetEmail().Return(testEmail)
+		mockUserDomainInterce.EXPECT().GetPassword().Return(testPassword)
 		mockUserDomainInterce.EXPECT().EncryptPassword()
 		mockUserDomainInterce.EXPECT().GenerateToken().Return("", errors.InternalServerError(
 			"Error trying to create token."))
 
-		repository.EXPECT().FindByEmailAndPassword("test@email.com", "123").Return(
+		repository.EXPECT().FindByEmailAndPassword("test@email.com", testPassword).Return(
 			mockUserDomainInterce, nil)
 		user, token, err := service.LoginUserService(mockUserDomainInterce)
 
@@ -72,7 +77,7 @@ func TestUserDomainService_LoginUserService(t *testing.T) {
 
 	t.Run("login_user_when_generate_token_error", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testPassword, testName, testAge)
 		userDomain.SetID(id)
 
 		repository.EXPECT().FindByEmailAndPassword(userDomain.GetEmail(), gomock.Any()).Return(userDomain, nil)
