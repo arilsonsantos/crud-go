@@ -18,6 +18,11 @@ import (
 	"testing"
 )
 
+var testEmail = "test@email.com"
+var errorMessageTest = "Error test"
+var testName = "Jonh Test"
+var testAge int8 = 42
+
 // Find
 func TestUserControllerInterface_FindByEmail(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -45,11 +50,11 @@ func TestUserControllerInterface_FindByEmail(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		param := []gin.Param{
-			{Key: "userEmail", Value: "test@email.com"},
+			{Key: "userEmail", Value: testEmail},
 		}
 
-		mockService.EXPECT().FindByEmail("test@email.com").Return(
-			nil, errors.InternalServerError("Error test"))
+		mockService.EXPECT().FindByEmail(testEmail).Return(
+			nil, errors.InternalServerError(errorMessageTest))
 		MakeRequest(context, param, url.Values{}, "GET", nil)
 		controller.FindByEmail(context)
 
@@ -61,11 +66,11 @@ func TestUserControllerInterface_FindByEmail(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		param := []gin.Param{
-			{Key: "userEmail", Value: "test@email.com"},
+			{Key: "userEmail", Value: testEmail},
 		}
 
-		userDomain := domain.NewUserDomain("test@email", "123", "Test", 42)
-		mockService.EXPECT().FindByEmail("test@email.com").Return(
+		userDomain := domain.NewUserDomain(testEmail, "123", "Test", testAge)
+		mockService.EXPECT().FindByEmail(testEmail).Return(
 			userDomain, nil)
 		MakeRequest(context, param, url.Values{}, "GET", nil)
 		controller.FindByEmail(context)
@@ -107,7 +112,7 @@ func TestUserControllerInterface_FindById(t *testing.T) {
 		}
 
 		mockService.EXPECT().FindById(id).Return(
-			nil, errors.InternalServerError("Error test"))
+			nil, errors.InternalServerError(errorMessageTest))
 		MakeRequest(context, param, url.Values{}, "GET", nil)
 		controller.FindById(context)
 
@@ -123,7 +128,7 @@ func TestUserControllerInterface_FindById(t *testing.T) {
 			{Key: "userId", Value: id},
 		}
 
-		userDomain := domain.NewUserDomain("test@email", "123", "Test", 42)
+		userDomain := domain.NewUserDomain(testEmail, "123", "Test", testAge)
 		mockService.EXPECT().FindById(id).Return(
 			userDomain, nil)
 		MakeRequest(context, param, url.Values{}, "GET", nil)
@@ -172,7 +177,7 @@ func TestUserControllerInterface_FindUserLogin(t *testing.T) {
 		body, _ := json.Marshal(userRequest)
 		stringReader := io.NopCloser(strings.NewReader(string(body)))
 
-		mockService.EXPECT().LoginUserService(userDomain).Return(nil, "", errors.InternalServerError("Error test"))
+		mockService.EXPECT().LoginUserService(userDomain).Return(nil, "", errors.InternalServerError(errorMessageTest))
 
 		MakeRequest(context, []gin.Param{}, url.Values{}, http.MethodPost, stringReader)
 		controller.FindUserLogin(context)
@@ -233,7 +238,7 @@ func TestUserControllerInterface_Delete(t *testing.T) {
 			{Key: "userId", Value: id},
 		}
 
-		mockService.EXPECT().Delete(id).Return(errors.InternalServerError("Error test"))
+		mockService.EXPECT().Delete(id).Return(errors.InternalServerError(errorMessageTest))
 		MakeRequest(context, param, url.Values{}, "DELETE", nil)
 		controller.Delete(context)
 
@@ -270,7 +275,7 @@ func TestUserControllerInterface_Create(t *testing.T) {
 
 		userRequest := dto.UserRequestDto{
 			Email:    "test",
-			Name:     "Test Name",
+			Name:     testName,
 			Age:      0,
 			Password: "123",
 		}
@@ -289,9 +294,9 @@ func TestUserControllerInterface_Create(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		userRequest := dto.UserRequestDto{
-			Email:    "test@email.com",
-			Name:     "Test Name",
-			Age:      42,
+			Email:    testEmail,
+			Name:     testName,
+			Age:      testAge,
 			Password: "123456!",
 		}
 
@@ -319,9 +324,9 @@ func TestUserControllerInterface_Create(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		userRequest := dto.UserRequestDto{
-			Email:    "test@email.com",
-			Name:     "Test Name",
-			Age:      42,
+			Email:    testEmail,
+			Name:     testName,
+			Age:      testAge,
 			Password: "123456!",
 		}
 
@@ -375,8 +380,8 @@ func TestUserControllerInterface_Update(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		userRequest := dto.UserUpdateRequestDto{
-			Name: "Test Name",
-			Age:  42,
+			Name: testName,
+			Age:  testAge,
 		}
 
 		param := []gin.Param{
@@ -400,8 +405,8 @@ func TestUserControllerInterface_Update(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		userRequest := dto.UserUpdateRequestDto{
-			Name: "Test Name",
-			Age:  42,
+			Name: testName,
+			Age:  testAge,
 		}
 
 		id := primitive.NewObjectID().Hex()
@@ -435,8 +440,8 @@ func TestUserControllerInterface_Update(t *testing.T) {
 		context := GetTestGinContext(recorder)
 
 		userRequest := dto.UserUpdateRequestDto{
-			Name: "Test Name",
-			Age:  42,
+			Name: testName,
+			Age:  testAge,
 		}
 
 		id := primitive.NewObjectID().Hex()
