@@ -22,18 +22,18 @@ func TestUserDomainService_FindById(t *testing.T) {
 
 	t.Run("findById_success", func(t *testing.T) {
 		repository.EXPECT().FindById("123").Return(domain.NewUserDomain(
-			testEmail, testPassword, testName, testAge), nil)
+			testEmail, testP, testName, testAge), nil)
 
-		user, err := service.FindById(testPassword)
+		user, err := service.FindById(testP)
 
 		assert.Nil(t, err)
 		assert.EqualValues(t, user.GetEmail(), testEmail)
 	})
 
 	t.Run("findBydId_not_found", func(t *testing.T) {
-		repository.EXPECT().FindById(testPassword).Return(nil, errors.NotFoundError("User not found with this ID: 123"))
+		repository.EXPECT().FindById(testP).Return(nil, errors.NotFoundError("User not found with this ID: 123"))
 
-		_, err := service.FindById(testPassword)
+		_, err := service.FindById(testP)
 
 		assert.NotNil(t, err)
 		assert.EqualValues(t, err.Code, http.StatusNotFound)
@@ -50,7 +50,7 @@ func TestUserDomainService_FindEmail(t *testing.T) {
 
 	t.Run("findByEmail_success", func(t *testing.T) {
 		repository.EXPECT().FindByEmail(testEmail).Return(domain.NewUserDomain(
-			testEmail, testPassword, "Teste", 42), nil)
+			testEmail, testP, "Teste", 42), nil)
 
 		user, err := service.FindByEmail(testEmail)
 
