@@ -18,7 +18,7 @@ func main() {
 	logger.Info("Starting application...")
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Deu pau!")
+		log.Fatal("Error to start application.")
 	}
 
 	ctx := context.Background()
