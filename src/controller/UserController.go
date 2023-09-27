@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/arilsonsantos/crud-go.git/src/configuration/logger"
 	"github.com/arilsonsantos/crud-go.git/src/controller/dto"
 	"github.com/arilsonsantos/crud-go.git/src/errors"
@@ -26,7 +25,6 @@ func (uc *userControllerInterface) Create(c *gin.Context) {
 		c.JSON(restErr.Code, restErr)
 		return
 	}
-	fmt.Println(userRequest)
 
 	userDomain := domain.NewUserDomain(
 		userRequest.Email,
@@ -61,6 +59,7 @@ func (uc *userControllerInterface) Update(c *gin.Context) {
 	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
 		errorRest := errors.BadRequestError("Invalid userId, must be a Hex value")
 		c.JSON(errorRest.Code, errorRest)
+		return
 	}
 
 	userDomain := domain.NewUserUpdateDomain(
@@ -91,6 +90,7 @@ func (uc *userControllerInterface) Delete(c *gin.Context) {
 	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
 		errorRest := errors.BadRequestError("Invalid userId, must be a Hex value")
 		c.JSON(errorRest.Code, errorRest)
+		return
 	}
 
 	err := uc.userService.Delete(userId)
@@ -114,11 +114,12 @@ func (uc *userControllerInterface) FindById(c *gin.Context) {
 
 	userId := c.Param("userId")
 
-	//if _, err := uuid.Parse(userId); err != nil {
+	// if _, err := uuid.Parse(userId); err != nil {
 	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
 		errorMessage := errors.BadRequestError("UserId is not valid ID")
 		logger.Error(errorMessage.Message, err, zap.String("UserController", "FindById"))
 		c.JSON(errorMessage.Code, errorMessage)
+		return
 	}
 
 	userDomain, err := uc.userService.FindById(userId)
@@ -142,6 +143,7 @@ func (uc *userControllerInterface) FindByEmail(c *gin.Context) {
 		errorMessage := errors.BadRequestError("Email is not valid.")
 		logger.Error(errorMessage.Message, err, zap.String("UserController", "FindByEmail"))
 		c.JSON(errorMessage.Code, errorMessage)
+		return
 	}
 
 	userDomain, err := uc.userService.FindByEmail(userEmail)
