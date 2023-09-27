@@ -15,6 +15,7 @@ import (
 var testEmail = "test@email.com"
 var testName = "John Test"
 var testAge int8 = 42
+var errorDBMessage = "Error from database"
 
 func TestUserRepositoryInterface_Create(t *testing.T) {
 	mtestDb, databaseName, _ := getDataBaseTest(t)
@@ -41,7 +42,7 @@ func TestUserRepositoryInterface_Create(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetAge(), testAge)
 	})
 
-	mtestDb.Run("error from database", func(mt *mtest.T) {
+	mtestDb.Run(errorDBMessage, func(mt *mtest.T) {
 		mt.AddMockResponses(bson.D{
 			{Key: "ok", Value: 0},
 		})
@@ -62,7 +63,7 @@ func TestUserRepositoryInterface_FindByEmail(t *testing.T) {
 	mTestDb.Run("when_sending_a_valid_email_return_success", func(mt *mtest.T) {
 		userEntity := entity.UserEntity{
 			ID:       primitive.NewObjectID(),
-			Email:    "john@email.com",
+			Email:    testName,
 			Password: "123",
 			Name:     "John Lennon",
 			Age:      50,
@@ -125,7 +126,7 @@ func TestUserRepositoryInterface_FindById(t *testing.T) {
 	mTestDb.Run("when_sending_a_valid_id_return_success", func(mt *mtest.T) {
 		userEntity := entity.UserEntity{
 			ID:       primitive.NewObjectID(),
-			Email:    "john@email.com",
+			Email:    testName,
 			Password: "123",
 			Name:     "John Lennon",
 			Age:      50,
@@ -185,7 +186,7 @@ func TestUserRepositoryInterface_FindByEmailAndPassword(t *testing.T) {
 
 	mTestDb.Run("when_sending_a_valid_email_and_password_return_success", func(mt *mtest.T) {
 		userEntity := entity.UserEntity{
-			Email:    "john@email.com",
+			Email:    testName,
 			Password: "123",
 		}
 		mt.AddMockResponses(mtest.CreateCursorResponse(
@@ -255,7 +256,7 @@ func TestUserRepositoryInterface_Delete(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	mTestDb.Run("error from database", func(mt *mtest.T) {
+	mTestDb.Run(errorDBMessage, func(mt *mtest.T) {
 		mt.AddMockResponses(bson.D{
 			{Key: "ok", Value: 0},
 		})
@@ -291,7 +292,7 @@ func TestUserRepositoryInterface_Update(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetAge(), testAge)
 	})
 
-	mTestDb.Run("error from database", func(mt *mtest.T) {
+	mTestDb.Run(errorDBMessage, func(mt *mtest.T) {
 		mt.AddMockResponses(bson.D{
 			{Key: "ok", Value: 0},
 		})

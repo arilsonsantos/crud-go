@@ -19,7 +19,7 @@ func TestUserDomainService_Create(t *testing.T) {
 
 	t.Run("when_exists_an_user_returns_error", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testP, testName, 42)
 		userDomain.SetID(id)
 
 		repository.EXPECT().FindByEmail(userDomain.GetEmail()).Return(userDomain, nil)
@@ -32,7 +32,7 @@ func TestUserDomainService_Create(t *testing.T) {
 
 	t.Run("when_user_is_not_registered_returns_error", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testP, testName, testAge)
 		userDomain.SetID(id)
 
 		repository.EXPECT().FindByEmail(userDomain.GetEmail()).Return(nil, nil)
@@ -47,7 +47,7 @@ func TestUserDomainService_Create(t *testing.T) {
 
 	t.Run("when_user_is_not_registered_returns_success", func(t *testing.T) {
 		id := primitive.NewObjectID().Hex()
-		userDomain := domain.NewUserDomain("test@email", "123", "Test Name", 42)
+		userDomain := domain.NewUserDomain(testEmail, testP, testName, testAge)
 		userDomain.SetID(id)
 
 		repository.EXPECT().FindByEmail(userDomain.GetEmail()).Return(nil, nil)
