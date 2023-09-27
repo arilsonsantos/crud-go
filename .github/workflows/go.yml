@@ -26,3 +26,9 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@develop
+      env:
+        GITHUB_TOKEN: ${{ secretes.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secretes.SONAR_TOKEN }}
